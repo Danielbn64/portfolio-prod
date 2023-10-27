@@ -137,7 +137,7 @@ const controller = {
 
     if (req.files) {
       var filePath = req.files.image.path;
-      var fileSplit = filePath.split("\\");
+      var fileSplit = filePath.split("/");
       var fileName = fileSplit[1];
       var extSplit = fileName.split(".");
       var fileExt = extSplit[1];
