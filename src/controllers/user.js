@@ -3,6 +3,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const jwt = require("../../service/jwt");
+const jwtobject = require("jsonwebtoken");
 const key = require("../models/key");
 
 const controller = {
@@ -52,7 +53,9 @@ const controller = {
               });
             });
           } else {
-            res.status(200).send({ message: "Solo puedes crear un usuario administrador" });
+            res
+              .status(200)
+              .send({ message: "Solo puedes crear un usuario administrador" });
           }
         }
       });
@@ -73,12 +76,11 @@ const controller = {
         if (user) {
           bcrypt.compare(password, user.password).then((isMatch) => {
             if (!isMatch) {
-              res
-                .status(404)
-                .send({ message: "El usuario no existe" });
+              res.status(404).send({ message: "El usuario no existe" });
             } else {
               if (params.gettoken) {
                 const token = jwt.createToken(user);
+                res.cookie("loginToken", token, { httpOnly: true });
                 res.status(200).send({
                   message: "Token generado exitosamente",
                   token: token,
@@ -95,42 +97,49 @@ const controller = {
     });
   },
 
-  validateToken: function (req, res) {
-    const params = req.body.token;
-    const jwtdecode = jwt.decoderToken(params, key.secret);
-
-    if (!jwtdecode) {
-      res
-        .status(200)
-        .send({
+  tokenVerify: function (req, res) {
+    const responseToken = req.cookies.loginToken;
+    
+    try {
+      const jwtdecode = jwtobject.verify(responseToken, key.secret);
+      if (!jwtdecode) {
+        res.status(200).send({
           message: "El token no existe o la llave es incorrecta",
-          validation: false,
+          tokenValidation: false,
         });
-    } else {
-      const issetUser = User.findById(jwtdecode.sub, (error, issetUser) => {
-        if (error) {
-          res
-            .status(403)
-            .send({
-              message: "No se ha encotrado usuario con el token actual",
+      } else {
+        const issetUser = User.findById(jwtdecode.sub, (error, issetUser) => {
+          if (error) {
+            res.status(403).send({
+              message: "Error al validar el token",
             });
-        } else {
-          if (
-            issetUser &&
-            jwtdecode.role == "ROLE_ADMIN" &&
-            jwtdecode.exp < Date.now()
-          ) {
-            res
-              .status(200)
-              .send({ validation: true, role: "ROLE_ADMIN", exp: false });
           } else {
-            res.status(200).send({
-              message: "El token actual no es valido o esta caducado",
-              validation: false,
-            });
+            if (
+              issetUser &&
+              jwtdecode.role == "ROLE_ADMIN" &&
+              jwtdecode.exp < Date.now()
+            ) {
+              res
+                .status(200)
+                .send({
+                  tokenValidation: true,
+                  role: "ROLE_ADMIN",
+                  exp: false,
+                });
+            } else {
+              res.status(200).send({
+                message: "El token actual no es valido o esta caducado",
+                tokenValidation: false,
+              });
+            }
           }
-        }
-      });
+        });
+      }
+    } catch {
+      res.status(200).send({
+        message: "El token tiene un formato incorrecto o es invalido",
+        tokenValidation: false,
+      })
     }
   },
 };
