@@ -2,6 +2,8 @@
 //Crear un servidor:
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require('cors');
+var cookieParser = require('cookie-parser');
 const app = express();
 
 //Archivos de rutas:
@@ -12,19 +14,14 @@ const emailRoutes = require("./routes/email");
 //Middlewares:
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 var path = require('path');
 
 // Configurar cabeceras y cors:
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://daniload.com");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
-  next();
-});
+app.use(cors({
+  origin: "http://daniload.com",
+  credentials: true,
+}));
 
 //Rutas:
 app.use("/", express.static("client", { redirect: false }));
