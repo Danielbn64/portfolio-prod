@@ -1,0 +1,30 @@
+<svg
+   fill="#fff"
+   version="1.0"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="40px"
+   height="40px"
+   viewBox="0 0 100 100"
+   enable-background="new 0 0 100 100"
+   xml:space="preserve"
+   sodipodi:docname="Angular.svg"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+>
+   <defs id="defs9" />
+   <path
+      id="polygon2"
+      transform="matrix(1.2509926,0,0,1.2488351,-12.549631,-12.355206)"
+      d="m 50,44.001 -3.887,9.333 h 7.777 z"
+   />
+   <path
+      d="M 50.003906,0.00939375 0.0071704,16.674435 12.506355,83.334602 50.003906,99.999638 87.501458,83.334602 100.00064,16.674435 Z M 61.810635,70.835507 58.337113,62.503612 H 41.670701 l -3.469773,8.331895 h -9.029412 l 20.83239,-49.995124 20.832391,49.995124 z"
+      id="path4"
+      style="stroke-width: 1.24993"
+   />
+</svg>
